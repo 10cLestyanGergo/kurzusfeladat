@@ -1,28 +1,35 @@
 <!DOCTYPE html>
 <html lang="hu">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kurzus és Diák Nyilvántartás</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Kurzusok és Diákok Nyilvántartása</h1>
-      <nav>
-        <button class="nav-btn" onclick="showCourses()">Kurzusok</button>
-        <button class="nav-btn" onclick="showStudents()">Diákok</button>
-      </nav>
-    </header>
+<head>
+    <meta charset="UTF-8">
+    <title>Kurzusok és Diákok</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Kurzusok és Diákok</h1>
+    <button onclick="toggleSection('courses')">Kurzusok</button>
+    <button onclick="toggleSection('students')">Diákok</button>
 
-    <div id="content">
-      <!-- Dinamikusan töltődő tartalom -->
+    <div id="courses" class="hidden">
+        <h2>Kurzusok</h2>
+        <button onclick="displayCourseForm()">Új kurzus létrehozása</button>
+        <div id="courseForm" class="hidden">
+            <input type="text" id="courseInputName" placeholder="Kurzus név">
+            <button onclick="addCourse()">Létrehozás</button>
+        </div>
+        <div id="courseList"></div>
     </div>
 
-    <div id="modalContext">
-      <!-- Modalok a kurzusok és diákok hozzáadásához és szerkesztéséhez -->
+    <div id="students" class="hidden">
+        <h2>Diákok</h2>
+        <button onclick="displayStudentForm()">Új diák létrehozása</button>
+        <div id="studentForm" class="hidden">
+            <input type="text" id="studentInputName" placeholder="Diák név">
+            <button onclick="addStudent()">Létrehozás</button>
+        </div>
+        <div id="studentList"></div>
     </div>
 
     <script src="scripts.js"></script>
-  </body>
+</body>
 </html>
