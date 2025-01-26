@@ -1,146 +1,145 @@
-const apiBaseUrl = 'https://vvri.pythonanywhere.com/api';
+const apiUrl = "https://vvri.pythonanywhere.com/api/courses";
+const studentApiUrl = "https://vvri.pythonanywhere.com/api/students";
 
-async function fetchData(type) {
-  const response = await fetch(`${apiBaseUrl}/${type}`);
-  return await response.json();
+function toggleSection(sectionType) {
+    document.getElementById('courses').className = sectionType === 'courses' ? 'visible' : 'hidden';
+    document.getElementById('students').className = sectionType === 'students' ? 'visible' : 'hidden';
 }
 
-async function showCourses() {
-  const courses = await fetchData('courses');
-  let htmlContent = `
-    <h2>Kurzusok</h2>
-    <button onclick="showAddModal('course')">Új kurzus hozzáadása</button>
-  `;
-  courses.forEach(course => {
-    htmlContent += `
-      <div class="course">
-        <span>${course.name}</span>
-        <div>
-          <button class="edit" onclick="editItem('course', ${course.id}, '${course.name}')">Szerkesztés</button>
-          <button class="delete" onclick="deleteItem('course', ${course.id})">Törlés</button>
-        </div>
-      </div>
+function displayCourseForm() {
+    document.getElementById('courseForm').innerHTML = `
+        <input type="text" id="courseInputName" placeholder="Kurzus név">
+        <button onclick="addCourse()">Létrehozás</button>
     `;
-  });
-  document.getElementById('content').innerHTML = htmlContent;
+    document.getElementById('courseForm').className = 'visible';
 }
 
-async function showStudents() {
-  const students = await fetchData('students');
-  let htmlContent = `
-    <h2>Diákok</h2>
-    <button onclick="showAddModal('student')">Új diák hozzáadása</button>
-  `;
-  students.forEach(student => {
-    htmlContent += `
-      <div class="student">
-        <span>${student.name}</span>
-        <div>
-          <button class="edit" onclick="editItem('student', ${student.id}, '${student.name}')">Szerkesztés</button>
-          <button class="delete" onclick="deleteItem('student', ${student.id})">Törlés</button>
-        </div>
-      </div>
+function displayStudentForm() {
+    document.getElementById('studentForm').innerHTML = `
+        <input type="text" id="studentInputName" placeholder="Diák név">
+        <button onclick="addStudent()">Létrehozás</button>
     `;
-  });
-  document.getElementById('content').innerHTML = htmlContent;
+    document.getElementById('studentForm').className = 'visible';
 }
 
-function showAddModal(type) {
-  const modal = document.getElementById('modalContext');
-  modal.innerHTML = `
-    <div id="addModal">
-      <h3>${type === 'course' ? 'Új kurzus' : 'Új diák'} hozzáadása</h3>
-      <form onsubmit="addItem(event, '${type}')">
-        <label for="name">Név</label>
-        <input type="text" id="name" required />
-        <button type="submit">Mentés</button>
-        <button type="button" onclick="closeModal()">Bezárás</button>
-      </form>
-    </div>
-  `;
-  modal.style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('modalContext').style.display = 'none';
-}
-
-async function addItem(event, type) {
-  event.preventDefault();
-  const name = document.getElementById('name').value;
-  const response = await fetch(`${apiBaseUrl}/${type}s`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name })
-  });
-  if (response.ok) {
-    closeModal();
-    type === 'course' ? showCourses() : showStudents();
-  }
-}
-
-function editItem(type, id, name) {
-  const modal = document.getElementById('modalContext');
-  modal.innerHTML = `
-    <div id="editModal">
-      <h3>${type === 'course' ? 'Kurzus' : 'Diák'} szerkesztése</h3>
-      <form onsubmit="updateItem(event, '${type}', ${id})">
-        <input type="text" id="name" value="${name}" required />
-        <button type="submit">Mentés</button>
-        <button type="button" onclick="closeModal()">Bezárás</button>
-      </form>
-    </div>
-  `;
-  modal.style.display = 'flex';
-}
-
-async function updateItem(event, type, id) {
-  event.preventDefault();
-  const name = document.getElementById('name').value;
-  const response = await fetch(`${apiBaseUrl}/${type}s/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name })
-  });
-  if (response.ok) {
-    closeModal();
-    type === 'course' ? showCourses() : showStudents();
-  }
-}
-
-async function deleteItem(type, id) {
-  const response = await fetch(`${apiBaseUrl}/${type}s/${id}`, { method: 'DELETE' });
-  if (response.ok) {
-    type === 'course' ? showCourses() : showStudents();
-  }
-}
-async function addItem(event, type) {
-    event.preventDefault();
-    const name = document.getElementById('name').value;
-  
-    // Ellenőrizzük, hogy a név mező nem üres
-    if (!name) {
-      alert("A név mező nem lehet üres!");
-      return;
-    }
-  
-    try {
-      const response = await fetch(`${apiBaseUrl}/${type}s`, {
+function addCourse() {
+    const courseName = document.getElementById('courseInputName').value;
+    fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }) // JSON formátumban küldjük
-      });
-  
-      if (response.ok) {
-        closeModal();
-        type === 'course' ? showCourses() : showStudents();
-      } else {
-        const errorText = await response.text();
-        alert(`Hiba történt: ${response.status} - ${errorText}`);
-      }
-    } catch (error) {
-      console.error('Hiba a kérés során:', error);
-      alert('Hiba történt a diák hozzáadása közben!');
-    }
-  }
-  
+        body: JSON.stringify({ name: courseName })
+    })
+    .then(response => response.json())
+    .then(() => {
+        fetchCourses();
+        document.getElementById('courseForm').className = 'hidden';
+        document.getElementById('courseInputName').value = '';
+    });
+}
+
+function addStudent() {
+    const studentName = document.getElementById('studentInputName').value;
+    fetch(studentApiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: studentName })
+    })
+    .then(response => response.json())
+    .then(() => {
+        fetchStudents();
+        document.getElementById('studentForm').className = 'hidden';
+        document.getElementById('studentInputName').value = '';
+    });
+}
+
+function fetchCourses() {
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const courseContainer = document.getElementById('courseList');
+            courseContainer.innerHTML = data.map(course => `
+                <div>
+                    <h3>${course.name}</h3>
+                    <button onclick="editCourseForm('${course.id}', '${course.name}')">Szerkesztés</button>
+                    <button onclick="removeCourse('${course.id}')">Törlés</button>
+                </div>
+            `).join('');
+        });
+}
+
+function fetchStudents() {
+    fetch(studentApiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const studentContainer = document.getElementById('studentList');
+            studentContainer.innerHTML = data.map(student => `
+                <div>
+                    <h3>${student.name}</h3>
+                    <button onclick="editStudentForm('${student.id}', '${student.name}')">Szerkesztés</button>
+                    <button onclick="removeStudent('${student.id}')">Törlés</button>
+                </div>
+            `).join('');
+        });
+}
+
+function editCourseForm(id, name) {
+    document.getElementById('courseForm').innerHTML = `
+        <input type="text" id="updateCourseName" value="${name}">
+        <button onclick="updateCourse('${id}')">Mentés</button>
+    `;
+    document.getElementById('courseForm').className = 'visible';
+}
+
+function editStudentForm(id, name) {
+    document.getElementById('studentForm').innerHTML = `
+        <input type="text" id="updateStudentName" value="${name}">
+        <button onclick="updateStudent('${id}')">Mentés</button>
+    `;
+    document.getElementById('studentForm').className = 'visible';
+}
+
+function updateCourse(id) {
+    const updatedCourseName = document.getElementById('updateCourseName').value;
+    fetch(`${apiUrl}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: updatedCourseName })
+    })
+    .then(response => response.json())
+    .then(() => {
+        fetchCourses();
+        document.getElementById('courseForm').className = 'hidden';
+        document.getElementById('updateCourseName').value = '';
+    });
+}
+
+function updateStudent(id) {
+    const updatedStudentName = document.getElementById('updateStudentName').value;
+    fetch(`${studentApiUrl}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: updatedStudentName })
+    })
+    .then(response => response.json())
+    .then(() => {
+        fetchStudents();
+        document.getElementById('studentForm').className = 'hidden';
+        document.getElementById('updateStudentName').value = '';
+    });
+}
+
+function removeCourse(id) {
+    fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
+        .then(() => fetchCourses());
+}
+
+function removeStudent(id) {
+    fetch(`${studentApiUrl}/${id}`, { method: 'DELETE' })
+        .then(() => fetchStudents());
+}
+
+// Betöltjük a kezdeti adatokat
+window.onload = () => {
+    fetchCourses();
+    fetchStudents();
+};
