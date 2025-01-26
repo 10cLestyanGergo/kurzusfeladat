@@ -1,123 +1,59 @@
-/* Alap stílusok */
+/* Alap stílusok az egész oldalra */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f7f7f7;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-}
-
-/* Fejléc */
-header {
-    background-color: #5c6bc0;
-    color: white;
-    padding: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-header h1 {
-    font-size: 2rem;
+/* Fejléc stílus */
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #2c3e50;
 }
 
-/* Navigációs gombok */
-nav {
-    margin-top: 15px;
+h2 {
+    margin-bottom: 10px;
+    color: #34495e;
 }
 
-nav button.nav-btn {
-    background-color: #ff4081;
-    color: white;
-    padding: 12px 25px;
-    margin: 10px 5px;
+/* Gombok stílusa */
+button {
+    background-color: #3498db;
+    color: #fff;
     border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-nav button.nav-btn:hover {
-    background-color: #f50057;
-}
-
-/* Tartalom */
-#content {
-    padding: 30px;
-}
-
-/* Kártya stílus kurzusoknak és diákoknak */
-.course, .student {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin: 15px 0;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.course span, .student span {
-    font-size: 1.2rem;
-}
-
-button.edit, button.delete {
-    background-color: #00796b;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button.edit:hover, button.delete:hover {
-    background-color: #004d40;
-}
-
-/* Modális ablakok */
-#modalContext {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-#modalContext div {
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 30px;
-    width: 400px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Input mezők */
-input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+    padding: 10px 15px;
+    margin: 5px;
     border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-/* Gombok a modalban */
-button[type="submit"], button[type="button"] {
-    padding: 10px 20px;
-    border: none;
-    background-color: #ff4081;
-    color: white;
-    border-radius: 25px;
     cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover, button[type="button"]:hover {
-    background-color: #f50057;
+button:hover {
+    background-color: #2980b9;
 }
 
+/* Űrlapok és tartalom alapértelmezetten rejtve */
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+/* Szekciók (div-ek) formázása */
+#courses, #students {
+    background: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    text-align: left;
+}
